@@ -3,7 +3,7 @@
 In this **DevOps project**, I demonstrate how to **deploy a ZOMATO Clone App** using a variety of modern DevOps tools and services.
 
 ## Architecture Diagram
-![alt text](image.png)
+![alt text](image-1.png)
 
 ## 🛠️ Tools & Services Used:
 
