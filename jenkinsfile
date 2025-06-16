@@ -1,0 +1,107 @@
+pipeline{
+    agent any
+    tools{
+        jdk 'jdk17'
+        nodejs 'node23'
+    }
+    environment {
+        SCANNER_HOME = tool('sonar-scanner')
+    }
+    stages {
+        stage('Clean Workspace') {
+            steps {
+                echo 'Cleaning workspace...'
+                cleanWs()
+            }
+        }
+        stage('Checkout Code') {
+            steps {
+                echo 'Checking out code...'
+                git branch: 'main', url: 'https://github.com/lovish69/DevSecOps-Zomato.git'
+            }
+        }
+        stage('SonarQube Analysis') {
+            steps {
+                echo 'Running SonarQube analysis...'
+                withSonarQubeEnv('sonar-server') {
+                    sh ''' $SCANNER_HOME/bin/sonar-scanner -Dsonar.projectName=zomato \
+                    -Dsonar.projectKey=zomato '''
+                }
+            }
+        }
+        stage('Quality Gate') {
+            steps {
+                echo 'Checking Quality Gate...'
+                waitForQualityGate abortPipeline: false, credentialsId: 'Sonar-token' // Wait for SonarQube Quality Gate
+            }
+        }
+        stage('OWASP FS SCAN') {
+            steps {
+        dependencyCheck additionalArguments: '--scan ./ --disableYarnAudit --disableNodeAudit --update -n', odcInstallation: 'DP-Check'
+        dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+        stage('Trivy Scan') {
+            steps {
+                echo 'Running Trivy scan...'
+                sh "trivy fs . > trivy.txt"
+            }
+        }
+        stage('Build') {
+            steps {
+                echo 'Building the project...'
+                sh "docker build -t zomato ."
+            }
+        }
+        stage ("Tag & Push to DockerHub") {
+            steps {
+                script {
+                    withDockerRegistry(credentialsId: 'docker') {
+                        sh "docker tag zomato lovish56456/zomato:latest "
+                        sh "docker push lovish56456/zomato:latest "
+                    }
+                }
+            }
+        }
+        stage('Docker Scout Image') {
+            steps {
+                script{
+                   withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
+                       sh 'docker-scout quickview lovish56456/zomato:latest'
+                       sh 'docker-scout cves lovish56456/zomato:latest'
+                       sh 'docker-scout recommendations lovish56456/zomato:latest'
+                   }
+                }
+            }
+        }
+        stage ("Deploy to Container") {
+            steps {
+                sh 'docker run -d --name zomato -p 3000:3000 lovish56456/zomato:latest'
+            }
+        }
+    }
+    post {
+    always {
+        emailext attachLog: true,
+            subject: "'${currentBuild.result}'",
+            body: """
+                <html>
+                <body>
+                    <div style="background-color: #FFA07A; padding: 10px; margin-bottom: 10px;">
+                        <p style="color: white; font-weight: bold;">Project: ${env.JOB_NAME}</p>
+                    </div>
+                    <div style="background-color: #90EE90; padding: 10px; margin-bottom: 10px;">
+                        <p style="color: white; font-weight: bold;">Build Number: ${env.BUILD_NUMBER}</p>
+                    </div>
+                    <div style="background-color: #87CEEB; padding: 10px; margin-bottom: 10px;">
+                        <p style="color: white; font-weight: bold;">URL: ${env.BUILD_URL}</p>
+                    </div>
+                </body>
+                </html>
+            """,
+            to: 'hydray47@gmail.com',
+            mimeType: 'text/html',
+            attachmentsPattern: 'trivy.txt'
+        }
+    }
+}

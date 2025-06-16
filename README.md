@@ -17,3 +17,6 @@ In this **DevOps project**, I demonstrate how to **deploy a ZOMATO Clone App** u
 
 ---
 
+##
+Refer to this text file it has detailed documentation how to create this project.
+[text](<This Project Complete Readme.txt>)
