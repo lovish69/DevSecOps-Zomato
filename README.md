@@ -77,7 +77,8 @@ Refer to this text file it has detailed documentation how to create this project
 ---
 ## SonarQube
 ![Screenshot (100)](https://github.com/user-attachments/assets/6d83c93c-832f-4ecd-a1b4-8042dc90eae9)
-##SonarQube Webhook
+
+## SonarQube Webhook
 ![Screenshot (102)](https://github.com/user-attachments/assets/1ad9f86c-8b0f-4f75-844b-2097d1994783)
 
 ---
