@@ -75,6 +75,36 @@ Refer to this text file it has detailed documentation how to create this project
 [text](<This Project Complete Readme.txt>)
 
 ---
+## SonarQube
+![Screenshot (100)](https://github.com/user-attachments/assets/6d83c93c-832f-4ecd-a1b4-8042dc90eae9)
+##SonarQube Webhook
+![Screenshot (102)](https://github.com/user-attachments/assets/1ad9f86c-8b0f-4f75-844b-2097d1994783)
+
+---
+
+## Jenkins Pipeline
+
+![Screenshot (103)](https://github.com/user-attachments/assets/3324bfc6-d552-4ba6-b217-d8c5424f0567)
+
+
+
+---
+
+## ArgoCd Deployment
+
+![Screenshot (107)](https://github.com/user-attachments/assets/0683f7af-5760-4878-ba58-75c0285e06f3)
+
+---
+
+## Prometheus Monitoring
+
+![Screenshot (108)](https://github.com/user-attachments/assets/cdec223c-d492-4023-96a1-e616eea65aa8)
+
+---
+
+## Website
+
+![Screenshot (109)](https://github.com/user-attachments/assets/1e5ea233-ea46-4f75-95f2-acdce8589074)
 
 ## 👨‍💻 Author
 
